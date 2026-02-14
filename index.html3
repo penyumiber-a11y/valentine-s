@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Love Rain</title>
+
+  <script src="https://code.createjs.com/1.0.0/createjs.min.js"></script>
+
+  <style>
+    body {
+      margin: 0;
+      overflow: hidden;
+      background: black;
+    }
+    canvas {
+      display: block;
+    }
+  </style>
+</head>
+
+<body>
+
+<canvas id="canvas"></canvas>
+
+<script>
+  const canvas = document.getElementById("canvas");
+  const stage = new createjs.Stage(canvas);
+
+  canvas.width = window.innerWidth;
+  canvas.height = window.innerHeight;
+
+  let w = canvas.width;
+  let h = canvas.height;
+
+  // TEXT DI TENGAH
+  const text = new createjs.Text(
+    "happy valentine's day\n i love you so much",
+    "bold 28px Arial",
+    "#ffffff"
+  );
+
+  text.textAlign = "center";
+  text.textBaseline = "middle";
+  text.x = w / 2;
+  text.y = h / 2;
+  stage.addChild(text);
+
+  // LOVE FUNCTION
+  function createHeart() {
+    let heart = new createjs.Shape();
+
+    let size = 8 + Math.random() * 18;
+
+    heart.graphics
+      .beginFill("rgba(255, 80, 150, 0.85)")
+      .moveTo(0, size / 4)
+      .bezierCurveTo(0, -size / 2, -size, -size / 2, -size, size / 6)
+      .bezierCurveTo(-size, size, 0, size * 1.2, 0, size * 1.5)
+      .bezierCurveTo(0, size * 1.2, size, size, size, size / 6)
+      .bezierCurveTo(size, -size / 2, 0, -size / 2, 0, size / 4)
+      .endFill();
+
+    heart.x = Math.random() * w;
+    heart.y = -50;
+
+    heart.speed = 2 + Math.random() * 5;
+    heart.alpha = 0.3 + Math.random() * 0.7;
+    heart.rotation = Math.random() * 360;
+
+    // glow
+    heart.shadow = new createjs.Shadow("rgba(255, 0, 150, 0.8)", 0, 0, 10);
+
+    stage.addChild(heart);
+    return heart;
+  }
+
+  // BUAT BANYAK LOVE
+  let hearts = [];
+  for (let i = 0; i < 80; i++) {
+    hearts.push(createHeart());
+  }
+
+  // ANIMASI
+  function animate() {
+    hearts.forEach((heart) => {
+      heart.y += heart.speed;
+      heart.rotation += 2;
+
+      if (heart.y > h + 50) {
+        heart.y = -50;
+        heart.x = Math.random() * w;
+      }
+    });
+
+    stage.update();
+  }
+
+  createjs.Ticker.framerate = 60;
+  createjs.Ticker.addEventListener("tick", animate);
+
+  // RESPONSIVE
+  window.addEventListener("resize", () => {
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+
+    w = canvas.width;
+    h = canvas.height;
+
+    text.x = w / 2;
+    text.y = h / 2;
+  });
+</script>
+
+</body>
+</html>
